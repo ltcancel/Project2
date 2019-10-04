@@ -27,14 +27,29 @@ library(tidyr)
 library(ggplot2)
 library(RCurl)
 library(kableExtra)
+library(tidyverse)
 ```
 
 
 Load csv file
 ```{r}
 df <- read.table(text = getURL("https://raw.githubusercontent.com/ltcancel/Project2/master/3-8%20ELA%20and%20Math%20Scores%20by%20County.csv"), header = TRUE, sep = ",")
+df
 ```
 
+#### Create dataframes based on subgroups.
+
+Gender subgroup
+```{r}
+gender.df <- df %>% filter(SUBGROUP_CODE == "1" | SUBGROUP_CODE == "2" | SUBGROUP_CODE == "3")
+gender.df
+```
+
+Race/Ethnicity subgroup
+```{r}
+race.df <- df %>% filter(SUBGROUP_CODE == "1" | SUBGROUP_CODE %in% c(4:9))
+race.df
+```
 
 
 # Dataset #2
