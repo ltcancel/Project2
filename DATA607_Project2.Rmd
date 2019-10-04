@@ -8,10 +8,6 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-
-```
-
 # Dataset #1
 ##### Source: [New York State Education Department](https://data.nysed.gov/downloads.php)
 ##### Data Description: ELA and Math test scores for grades 3-8 by state and county
@@ -75,8 +71,23 @@ head(eco.df)
 ##### Data Description:
 **Note:** A csv file containing Pokemon data will download to your machine when you click on the Open Intro link
 
+Load csv file
+```{r}
+df2 <- read.csv(text = getURL("https://raw.githubusercontent.com/ltcancel/Project2/master/pokemon.csv"), header = TRUE, sep = ",")
+df2
+?read.csv
+```
+
+
 
 
 # Dataset #3
 ##### Source: [UFC-Fight historical data from 1993 to 2019](https://www.kaggle.com/rajeevw/ufcdata/version/2#raw_total_fight_data.csv)
 ##### Data Description: 
+
+Load csv file
+```{r}
+df3 <- read.csv(text = getURL("https://raw.githubusercontent.com/ltcancel/Project2/master/raw_total_fight_data.csv"), header = TRUE, sep = ";")
+head(df3)
+```
+
