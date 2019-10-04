@@ -8,3 +8,42 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+
+```
+
+# Dataset #1
+##### Source: [New York State Education Department](https://data.nysed.gov/downloads.php)
+##### Data Description: ELA and Math test scores for grades 3-8 by state and county
+**Note:** The original file is 57MB so I did minor manipulation using excel to create a smaller file. I copy and pasted all columns for the statewide data and each NYC county data to a new csv file. This is the only data manipulation done outside of R and this subset of data will be used in this project.
+
+--------
+#### Load all libraries
+```{r warning=FALSE, results='hide', message=FALSE}
+#install.packages("kableExtra") #install this package if it is not already installed
+library(knitr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(RCurl)
+library(kableExtra)
+```
+
+
+Load csv file
+```{r}
+df <- read.table(text = getURL("https://raw.githubusercontent.com/ltcancel/Project2/master/3-8%20ELA%20and%20Math%20Scores%20by%20County.csv"), header = TRUE, sep = ",")
+```
+
+
+
+# Dataset #2
+##### Source: [Open Intro](https://openintro.org/stat/data/pokemon.csv)
+##### Data Description:
+**Note:** A csv file containing Pokemon data will download to your machine when you click on the Open Intro link
+
+
+
+# Dataset #3
+##### Source: [UFC-Fight historical data from 1993 to 2019](https://www.kaggle.com/rajeevw/ufcdata/version/2#raw_total_fight_data.csv)
+##### Data Description: 
