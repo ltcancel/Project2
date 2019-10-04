@@ -34,21 +34,39 @@ library(tidyverse)
 Load csv file
 ```{r}
 df <- read.table(text = getURL("https://raw.githubusercontent.com/ltcancel/Project2/master/3-8%20ELA%20and%20Math%20Scores%20by%20County.csv"), header = TRUE, sep = ",")
-df
+head(df)
 ```
 
 #### Create dataframes based on subgroups.
 
 Gender subgroup
 ```{r}
-gender.df <- df %>% filter(SUBGROUP_CODE == "1" | SUBGROUP_CODE == "2" | SUBGROUP_CODE == "3")
-gender.df
+gender.df <- df %>% filter(SUBGROUP_CODE %in% c(1:3))
+head(gender.df)
 ```
 
 Race/Ethnicity subgroup
 ```{r}
 race.df <- df %>% filter(SUBGROUP_CODE == "1" | SUBGROUP_CODE %in% c(4:9))
-race.df
+head(race.df)
+```
+
+Education subgroup
+```{r}
+edu.df <- df %>% filter(SUBGROUP_CODE == "1" | SUBGROUP_CODE %in% c(10:11))
+head(edu.df)
+```
+
+Language subgroup
+```{r}
+language.df <- df %>% filter(SUBGROUP_CODE == "1" | SUBGROUP_CODE %in% c(12:13))
+head(language.df)
+```
+
+Economic subgroup
+```{r}
+eco.df <- df %>% filter(SUBGROUP_CODE =="1" | SUBGROUP_CODE %in% c(15:16))
+head(eco.df)
 ```
 
 
