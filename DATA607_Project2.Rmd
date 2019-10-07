@@ -34,36 +34,37 @@ head(df)
 ```
 
 #### Create dataframes based on subgroups.
-
-Gender subgroup
+Bronx filter
 ```{r}
-gender.df <- df %>% filter(SUBGROUP_CODE %in% c(1:3))
-head(gender.df)
+bronx.gender.df <- df %>% select(COUNTY_DESC, NAME, SUBGROUP_CODE, SUBGROUP_NAME, TOTAL_TESTED, MEAN_SCALE_SCORE) %>% filter(SUBGROUP_CODE %in% c(1:3), COUNTY_DESC %in% c("BRONX",""))
+bronx.gender.df
+ggplot(bronx.gender.df, aes(x=COUNTY_DESC, y=MEAN_SCALE_SCORE, color = SUBGROUP_NAME)) + geom_dotplot(binaxis = "y",stackdir = "center", binwidth = 1, fill = "white", stroke = 2) + labs(title = "Bronx Average Scores By Gender", x = "County", y = "Average Score")
+
+##all genders by boro 
+All.gender.df <- df %>% select(COUNTY_DESC, NAME, SUBGROUP_CODE, SUBGROUP_NAME, TOTAL_TESTED, MEAN_SCALE_SCORE) %>% filter(SUBGROUP_CODE %in% c(1:3), COUNTY_DESC !="") + facet_grid(.~fl)
+All.gender.df
+
+##all gender plot by boro
+ggplot(All.gender.df, aes(x=COUNTY_DESC, y=MEAN_SCALE_SCORE, color = SUBGROUP_NAME)) + geom_dotplot(binaxis = "y",stackdir = "center", binwidth = 1, fill = "white", stroke = 2) + labs(title = "Bronx Average Scores By Gender", x = "County", y = "Average Score")
+
+ggplot(bronx.df, aes(x=NAME, y=MEAN_SCALE_SCORE, color = SUBGROUP_NAME)) + geom_boxplot()
+?geom_dotplot
 ```
 
-Race/Ethnicity subgroup
+
+Creating graphs for dataset 1
 ```{r}
-race.df <- df %>% filter(SUBGROUP_CODE == "1" | SUBGROUP_CODE %in% c(4:9))
-head(race.df)
+ggplot(gender.df, aes(x=COUNTY_DESC, y=MEAN_SCALE_SCORE, color = SUBGROUP_NAME)) + geom_boxplot() + labs(title = "Average Scores by Gender", x = "County", y = "Average Score")
+?summarize
 ```
 
-Education subgroup
+Faceting dataset 1 - Race/Ethnicity subgroup
 ```{r}
-edu.df <- df %>% filter(SUBGROUP_CODE == "1" | SUBGROUP_CODE %in% c(10:11))
-head(edu.df)
+race.df <- df %>% select(COUNTY_DESC, NAME, SUBGROUP_CODE, SUBGROUP_NAME, TOTAL_TESTED, MEAN_SCALE_SCORE) %>% filter(SUBGROUP_CODE == "1" | SUBGROUP_CODE %in% c(4:9))
+colnames(race.df) <- c("COUNTY", "NAME", "SUB_CODE", "RACE_ETHNICITY", "TOTAL_TESTED", "MEAN_SCORE")
+ggplot(race.df, aes(x=COUNTY, y=MEAN_SCORE)) + geom_raster(aes(fill = RACE_ETHNICITY), hjust = 0.2, vjust = 0.2, interpolate = FALSE ) + labs(title = "Average Score by Race/Ethnicity per County", x = "County", y = "Mean Score")
 ```
 
-Language subgroup
-```{r}
-language.df <- df %>% filter(SUBGROUP_CODE == "1" | SUBGROUP_CODE %in% c(12:13))
-head(language.df)
-```
-
-Economic subgroup
-```{r}
-eco.df <- df %>% filter(SUBGROUP_CODE =="1" | SUBGROUP_CODE %in% c(15:16))
-head(eco.df)
-```
 
 
 # Dataset #2
