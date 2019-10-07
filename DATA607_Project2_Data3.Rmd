@@ -1,0 +1,36 @@
+---
+title: "DATA607_Project2_Data3"
+author: "LeTicia Cancel"
+date: "10/6/2019"
+output: html_document
+---
+
+
+# Dataset #3
+##### Source: [UFC-Fight historical data from 1993 to 2019](https://www.kaggle.com/rajeevw/ufcdata/version/2#raw_total_fight_data.csv)
+##### Data Description: 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+--------
+#### Load all libraries
+```{r warning=FALSE, results='hide', message=FALSE}
+#install.packages("kableExtra") #install this package if it is not already installed
+library(knitr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(RCurl)
+library(kableExtra)
+library(tidyverse)
+```
+
+
+Load csv file
+```{r}
+df3 <- read.csv(text = getURL("https://raw.githubusercontent.com/ltcancel/Project2/master/raw_total_fight_data.csv"), header = TRUE, sep = ";")
+head(df3)
+```

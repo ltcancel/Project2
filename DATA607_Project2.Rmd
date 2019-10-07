@@ -1,5 +1,5 @@
 ---
-title: "Project 2"
+title: "Project 2 - Dataset 1"
 author: "LeTicia Cancel"
 output: html_document
 ---
@@ -9,9 +9,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Dataset #1
-##### Source: [New York State Education Department](https://data.nysed.gov/downloads.php)
-##### Data Description: ELA and Math test scores for grades 3-8 by state and county
-**Note:** The original file is 57MB so I did minor manipulation using excel to create a smaller file. I copy and pasted all columns for the statewide data and each NYC county data to a new csv file. This is the only data manipulation done outside of R and this subset of data will be used in this project.
+##### **Source:** [New York State Education Department](https://data.nysed.gov/downloads.php)
+##### **Data Description:** ELA and Math test scores for grades 3-8 by state and county
+**Note:** The original file is 57MB so I did minor manipulation using excel to create a smaller file. I copy and pasted all columns for the statewide data and each NYC county to a new csv file. This is the only data manipulation done outside of R and this subset of data will be used in this project.
 
 --------
 #### Load all libraries
@@ -27,68 +27,49 @@ library(tidyverse)
 ```
 
 
-Load csv file
+#### Load csv file from Github
 ```{r}
 df <- read.table(text = getURL("https://raw.githubusercontent.com/ltcancel/Project2/master/3-8%20ELA%20and%20Math%20Scores%20by%20County.csv"), header = TRUE, sep = ",")
 head(df)
 ```
 
 #### Create dataframes based on subgroups.
-Bronx filter
+Gender subgroup with only the columns that are most important for this analysis
 ```{r}
-bronx.gender.df <- df %>% select(COUNTY_DESC, NAME, SUBGROUP_CODE, SUBGROUP_NAME, TOTAL_TESTED, MEAN_SCALE_SCORE) %>% filter(SUBGROUP_CODE %in% c(1:3), COUNTY_DESC %in% c("BRONX",""))
-bronx.gender.df
-ggplot(bronx.gender.df, aes(x=COUNTY_DESC, y=MEAN_SCALE_SCORE, color = SUBGROUP_NAME)) + geom_dotplot(binaxis = "y",stackdir = "center", binwidth = 1, fill = "white", stroke = 2) + labs(title = "Bronx Average Scores By Gender", x = "County", y = "Average Score")
+##all genders by boro excluding statewide data
+All.gender.df <- df %>% select(COUNTY_DESC, NAME, SUBGROUP_CODE, SUBGROUP_NAME, TOTAL_TESTED, MEAN_SCALE_SCORE) %>% filter(SUBGROUP_CODE %in% c(1:3), COUNTY_DESC !="") 
+head(All.gender.df)
+```
 
-##all genders by boro 
-All.gender.df <- df %>% select(COUNTY_DESC, NAME, SUBGROUP_CODE, SUBGROUP_NAME, TOTAL_TESTED, MEAN_SCALE_SCORE) %>% filter(SUBGROUP_CODE %in% c(1:3), COUNTY_DESC !="") + facet_grid(.~fl)
-All.gender.df
-
+Now that a filter dataframe has been created, let us compare the average test scores by gender for each county. 
+If we only look at each group, ignoring the colors within each subgroup for a moment, we can see that the Bronx population of 3-8 graders had the lowest average score while the New York county had the highest. Each of the five counties has a similar distribution of males and female scores where females (green) tend to score higher than males (blue). The Bronx and Richmond county had the greatest spread of scores while Queens is a little more condensed, showing us that most of the students had similar test scores. 
+```{r}
 ##all gender plot by boro
-ggplot(All.gender.df, aes(x=COUNTY_DESC, y=MEAN_SCALE_SCORE, color = SUBGROUP_NAME)) + geom_dotplot(binaxis = "y",stackdir = "center", binwidth = 1, fill = "white", stroke = 2) + labs(title = "Bronx Average Scores By Gender", x = "County", y = "Average Score")
-
-ggplot(bronx.df, aes(x=NAME, y=MEAN_SCALE_SCORE, color = SUBGROUP_NAME)) + geom_boxplot()
-?geom_dotplot
+ggplot(All.gender.df, aes(x=COUNTY_DESC, y=MEAN_SCALE_SCORE, color = SUBGROUP_NAME)) + geom_dotplot(binaxis = "y",stackdir = "center", binwidth = 1, fill = "white", stroke = 2) + labs(title = "Average Scores By Gender", x = "County", y = "Average Score")
 ```
 
 
-Creating graphs for dataset 1
+Subgroup based on immigration status and living status (homeless status and foster care status)
 ```{r}
-ggplot(gender.df, aes(x=COUNTY_DESC, y=MEAN_SCALE_SCORE, color = SUBGROUP_NAME)) + geom_boxplot() + labs(title = "Average Scores by Gender", x = "County", y = "Average Score")
-?summarize
+All.status.df <- df %>% select(COUNTY_DESC, NAME, SUBGROUP_CODE, SUBGROUP_NAME, TOTAL_TESTED, MEAN_SCALE_SCORE) %>% filter(SUBGROUP_CODE %in% c(17,18,20,21,22,23)) 
+head(All.status.df)
+```
+This boxplot shows us a greater disparity based on home satus, greater than the gender breakdown. Statewide data is included in this dataset but appears with no label under county. The population of immigrant students and students in foster care were only included in the statewide data and were not broken down by county. However we can see that this population of students scored the lowest when compared to all other subgroups. Homeless students are right in the middle across all counties. All other students who are not homeless, not in foster care, and not immigrants, all had very similar scores.  
+```{r}
+ggplot(All.status.df, aes(x=COUNTY_DESC, y=MEAN_SCALE_SCORE, color = SUBGROUP_NAME)) + geom_boxplot() + labs(title = "Average Scores by Home Status", x = "County", y = "Average Score")
 ```
 
-Faceting dataset 1 - Race/Ethnicity subgroup
+Subgroup based on race/ethnicity. 
 ```{r}
 race.df <- df %>% select(COUNTY_DESC, NAME, SUBGROUP_CODE, SUBGROUP_NAME, TOTAL_TESTED, MEAN_SCALE_SCORE) %>% filter(SUBGROUP_CODE == "1" | SUBGROUP_CODE %in% c(4:9))
+##rename columns in new filtered dataframe
 colnames(race.df) <- c("COUNTY", "NAME", "SUB_CODE", "RACE_ETHNICITY", "TOTAL_TESTED", "MEAN_SCORE")
+head(race.df)
+```
+This chart color codes all students based on their race/ethnicity so we can compare the average score between each group. We can see that towards that top of each county, green seems to take up most of the space and this is the Asian or Pacific Islander group. They are acutally hold the highest score across counties. New York has a larger Multiracial population and this group scored higher when compared to the other counties. New York also has an outlier group of American Indian or Alaskan Native that is their lowest scoring group. 
+```{r}
+##Plot average scores for each county based on race/ethnicity
 ggplot(race.df, aes(x=COUNTY, y=MEAN_SCORE)) + geom_raster(aes(fill = RACE_ETHNICITY), hjust = 0.2, vjust = 0.2, interpolate = FALSE ) + labs(title = "Average Score by Race/Ethnicity per County", x = "County", y = "Mean Score")
 ```
 
-
-
-# Dataset #2
-##### Source: [Open Intro](https://openintro.org/stat/data/pokemon.csv)
-##### Data Description:
-**Note:** A csv file containing Pokemon data will download to your machine when you click on the Open Intro link
-
-Load csv file
-```{r}
-df2 <- read.csv(text = getURL("https://raw.githubusercontent.com/ltcancel/Project2/master/pokemon.csv"), header = TRUE, sep = ",")
-df2
-?read.csv
-```
-
-
-
-
-# Dataset #3
-##### Source: [UFC-Fight historical data from 1993 to 2019](https://www.kaggle.com/rajeevw/ufcdata/version/2#raw_total_fight_data.csv)
-##### Data Description: 
-
-Load csv file
-```{r}
-df3 <- read.csv(text = getURL("https://raw.githubusercontent.com/ltcancel/Project2/master/raw_total_fight_data.csv"), header = TRUE, sep = ";")
-head(df3)
-```
 
