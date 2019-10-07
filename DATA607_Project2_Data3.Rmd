@@ -34,3 +34,9 @@ Load csv file
 df3 <- read.csv(text = getURL("https://raw.githubusercontent.com/ltcancel/Project2/master/raw_total_fight_data.csv"), header = TRUE, sep = ";")
 head(df3)
 ```
+
+
+```{r}
+ggplot()
+```
+
